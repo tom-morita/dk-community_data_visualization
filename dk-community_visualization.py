@@ -1,19 +1,15 @@
-import requests
 import sys
+import requests
 import urllib.parse
 from bs4 import BeautifulSoup
 import warnings;warnings.filterwarnings('ignore') # ssl証明書エラーを抑制
+
 import copy
 import ast
-
-
+import datetime
 from concurrent.futures import ThreadPoolExecutor
-import queue
-from requests_toolbelt.threaded import pool
 
 import numpy as np
-import datetime
-#import time
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
@@ -22,13 +18,11 @@ from matplotlib import ticker
 from collections import Counter
 
 
-
 manage_url = "https://manage.doorkeeper.jp"
 event_list = []
 user_list = []
 
 proxies ={"https":"http://127.0.0.1:8080","http":"http://127.0.0.1:8080",}
-
 
 
 def dk_login():
@@ -57,7 +51,7 @@ def dk_login():
         }
     login_data['authenticity_token'] = urllib.parse.quote(authenticity_token, encoding="utf8", safe="+%=/\\")
     payload = login_data
-    r = requests.post(url, data=payload, headers=headers, cookies=cookies, allow_redirects=False, proxies=proxies, verify=False)
+    r = requests.post(url, data=payload, headers=headers, cookies=cookies, allow_redirects=False) #, proxies=proxies, verify=False)
     auth_error="Invalid email or password."
     if auth_error in r.text:
         print("[!]", auth_error)
@@ -122,6 +116,7 @@ def get_event_list(cookies, group_url):
     count_num = 0
     date_num = 0
     
+    print("[>] Prepearing for event scraping,,,")
     while True:
         event_info = {}
         r = requests.get(event_url+"?page="+str(page_num), headers=headers, cookies=cookies) #,proxies=proxies, verify=False)
@@ -143,6 +138,7 @@ def get_event_list(cookies, group_url):
                             event_info["title"] = a_soup.getText()
                             event_list.append(copy.deepcopy(event_info))
                             event_num += 1
+                            print("*", end="")
     
 
         # <td class='nobreak' style='width: 20px'><span>162 / 176 people</span></td>
@@ -166,7 +162,6 @@ def get_event_list(cookies, group_url):
             date_num += 1
 
         page_num += 1
-
 
     def req_events(event):
         r = requests.get(manage_url+event["url"], headers=headers, cookies=cookies) #,proxies=proxies, verify=False)
@@ -208,6 +203,7 @@ def get_member_list(cookies, group_url):
     page_num = 1
     member_num = 0
     
+    print("[>] Prepearing for member scraping,,,")
     while True:
         member_info = {}
         r = requests.get(member_url+"?page="+str(page_num), headers=headers, cookies=cookies) #,proxies=proxies, verify=False)
@@ -228,12 +224,11 @@ def get_member_list(cookies, group_url):
                 
                 member_list.append(copy.deepcopy(member_info))
                 member_num += 1
+                print("*", end="")
         
         page_num += 1
 
-
-    print("[+] Now, scraping ", len(member_list),"members pages.")
-
+    print("\n[>] Now, scraping ", len(member_list),"members pages.")
 
     def req_members(member):
         url = manage_url + member["url"]
