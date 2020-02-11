@@ -48,7 +48,7 @@ requests==2.22.0
     
 * plot_member_transition(event_list, member_list)  
     * コミュニティ参加者の人数推移をグラフ化（横軸：日時、縦軸：人数（新規加入者/週、総和））  
-    <img src="images/community_plot.jpg" alt="community_plot">
+    <img src="images/community_plot.png" alt="community_plot">
     
 # 参考URL
 https://matplotlib.org/gallery/index.html
