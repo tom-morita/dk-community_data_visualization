@@ -5,10 +5,10 @@ Let's visualize your Doorkeeper community data.
 IT勉強会、イベントの運営プラットフォームのひとつDoorkeeper https://www.doorkeeper.jp/  
 自分が主催するコミュニティにおいて、人数推移などコミュニティ運営に役立つデータを可視化します  
 DoorkeeperにもAPIが用意されていますが、コミュニティ運営に役立つ機能としては十分ではありません  
-
+Webスクレイピングを利用してデータを取得し、整理します
 
 # インストール
-python3を利用してます。  
+python3を利用します。  
 ```
 pip install requests
 pip install beautifulsoup4
